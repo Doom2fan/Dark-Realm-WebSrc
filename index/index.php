@@ -10,7 +10,7 @@
 	<div id="head"><h1>marrub's place</h1></div>
 	<!-- Top (navigation) bar -->
 	<div id="topbar">
-		<p>[Index] | <a href="../downloads/">[Downloads]</a></p>
+		<p>[Index] | <a href="../downloads/">[Downloads]</a> | <a href="../guestbook/">[Guestbook]</a></p>
 	</div>
 	<!-- Main part of the page -->
 	<div id="main">
