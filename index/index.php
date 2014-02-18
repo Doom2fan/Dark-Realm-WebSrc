@@ -15,10 +15,24 @@
 	<!-- Main part of the page -->
 	<div id="main">
 		<?php
-		// open the xml file, read some stuff from it //
-		for($i = 1; $i < 200; $i++)
+		$page = (int) $_GET["page"];
+		// count post files //
+		$files = 0;
+		for($v = 1; $v < 200; $v++)
 		{
-			if(file_exists("../content/posts/post$i.xml"))
+			if(file_exists("../content/posts/post$v.xml")) $files++;
+			else break;
+		}
+		if($page == 0 || $page > ceil($files / 5))
+		{
+			echo("<meta HTTP-EQUIV=\"REFRESH\" content=\"0; url=http://marrub.altervista.org/index/?page=1\">");
+		}
+		else
+		{
+		// open the xml file, read some stuff from it //
+		for($i = 5 * ($page)-4; $i < (5*$page)+1; $i++)
+		{
+			if($i <= $files)
 			{
 				$posts[$i] = fopen("../content/posts/post$i.xml","r");
 				
@@ -26,10 +40,7 @@
 				$postdat[$i] = fread($posts[$i], 4096);
 				xml_parse_into_struct($parser[$i],$postdat[$i],$postvals[$i]);
 			}
-			else
-			{
-				break;
-			}
+			else break;
 		}
 		
 		xml_parser_free($parser);
@@ -42,14 +53,14 @@
 			{
 				if($val[tag] == "TITLE") {
 					$lmod = filemtime("../content/posts/post$v.xml");
-					echo("<a name=\"$v\"> <a href=\"#$v\"><h3>Post $v</a>: ");print_r($val[value]); echo("</h3>\n");
-					echo("<small>Posted "); echo(date("m/j/y h:i", $lmod)); echo("</small><br/>\n");
+					echo("<a name=\"$v\"> <a href=\"#$v\"><h3>Post $v</a>: " . $val[value] . "</h3>\n" .
+						"<small>Posted " . date("m/j/y h:i", $lmod) . "</small><br/>\n");
 				}
 				if($val[tag] == "BODY")
 				{
-					echo("<p>");// print_r($val[value]);
-					echo(preg_replace('/\\n/', '<br/>$0', $val[value]));
-					echo("</p><br/>\n");
+					echo("<p>" . 
+						preg_replace('/\\n/', '<br/>$0', $val[value]) .
+						"</p><br/>\n");
 				}
 			}
 			unset($val);
@@ -59,8 +70,6 @@
 	<!-- Sidebar -->
 	<div id="sidebar">
 		<h4>Articles</h4>
-		<!-- Example:
-			 <a href="1">Hello, world!</a>-->
 		<?php
 		// add posts to the articles list //
 		for($v = $i; $v > 0; $v--)
@@ -68,15 +77,20 @@
 			foreach($postvals[$v] as $key=>$val)
 			{
 				if($val[tag] == "TITLE") {
-					echo("<a href=\"#$v\"><p>$v</a>: ");print_r($val[value]); echo("</p>\n");
+					echo("<a href=\"#$v\"><p>$v</a>: " . $val[value] . "</p>\n");
 				}
 			}
 			unset($val);
 		}
-		unset($val);
+		?>
+		<br/><br/>
+		<?php
+		// add pages to the sidebar //
+		for($k = ceil($files / 5); $k > 0; $k--) echo(" : Page <a href=\"?page=$k\">". $k ."</a><br/>\n");
+		}
 		?>
 	</div>
-	<div id="footer"><a href="https://freedns.afraid.org/">FreeDNS</a> | <a href="http://marby.cf.gs/">Main</a></div>
+	<div id="footer"><p><a href="https://freedns.afraid.org/">FreeDNS</a> | <a href="http://marby.cf.gs/">Main</a></p></div>
 </div>
 </body>
 </html>

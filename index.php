@@ -1,1 +1,1 @@
-<meta HTTP-EQUIV="REFRESH" content="0; url=http://marrub.altervista.org/index/">
+<meta HTTP-EQUIV="REFRESH" content="0; url=http://marrub.altervista.org/index/?page=1">
