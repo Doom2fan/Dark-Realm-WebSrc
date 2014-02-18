@@ -7,23 +7,29 @@
 
 <body>
 <div id="wrapper">
-	<div id="head"><h1>marrub's place</h1></div>
 	<!-- Top (navigation) bar -->
 	<div id="topbar">
 		<p>[Index] | <a href="../downloads/">[Downloads]</a> | <a href="../guestbook/">[Guestbook]</a></p>
 	</div>
+	<div id="head"><h1>marrub's place</h1></div>
 	<!-- Main part of the page -->
 	<div id="main">
 		<?php
 		// open the xml file, read some stuff from it //
-		for($i = 1; $i < 5; $i++)
+		for($i = 1; $i < 200; $i++)
 		{
-			$posts[$i] = fopen("../content/posts/post$i.xml","r");
-			if($posts[$i] === false) break;
-			
-			$parser[$i] = xml_parser_create();
-			$postdat[$i] = fread($posts[$i], 4096);
-			xml_parse_into_struct($parser[$i],$postdat[$i],$postvals[$i]);
+			if(file_exists("../content/posts/post$i.xml"))
+			{
+				$posts[$i] = fopen("../content/posts/post$i.xml","r");
+				
+				$parser[$i] = xml_parser_create();
+				$postdat[$i] = fread($posts[$i], 4096);
+				xml_parse_into_struct($parser[$i],$postdat[$i],$postvals[$i]);
+			}
+			else
+			{
+				break;
+			}
 		}
 		
 		xml_parser_free($parser);
@@ -39,8 +45,11 @@
 					echo("<a name=\"$v\"> <a href=\"#$v\"><h3>Post $v</a>: ");print_r($val[value]); echo("</h3>\n");
 					echo("<small>Posted "); echo(date("m/j/y h:i", $lmod)); echo("</small><br/>\n");
 				}
-				if($val[tag] == "BODY") {
-					echo("<p>"); print_r($val[value]); echo("</p><br/>\n");
+				if($val[tag] == "BODY")
+				{
+					echo("<p>");// print_r($val[value]);
+					echo(preg_replace('/\\n/', '<br/>$0', $val[value]));
+					echo("</p><br/>\n");
 				}
 			}
 			unset($val);
