@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<posts>
-	<post>
-		<num>1</num>
-		<title>Example</title>
-		<body>This is an example XML file.</body>
-	</post>
-</posts>

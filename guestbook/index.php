@@ -19,7 +19,7 @@
 	</div>
 	<!-- Sidebar -->
 	<div id="sidebar"></div>
-	<div id="footer"><a href="https://freedns.afraid.org/">FreeDNS</a> | <a href="http://agitating.cf.gs/">Forums</a> | <a href="http://marby.cf.gs/">Main</a></div>
+	<div id="footer"><a href="https://freedns.afraid.org/">FreeDNS</a> | <a href="http://marby.cf.gs/">Main</a></div>
 </div>
 </body>
 </html>

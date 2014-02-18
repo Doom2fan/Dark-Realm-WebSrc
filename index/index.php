@@ -16,29 +16,35 @@
 	<div id="main">
 		<?php
 		// open the xml file, read some stuff from it //
-		$parser = xml_parser_create();
-		$posts = fopen("../content/posts.xml","r");
-		$postdat = fread($posts, 4096);
+		for($i = 1; $i < 5; $i++)
+		{
+			$posts[$i] = fopen("../content/posts/post$i.xml","r");
+			if($posts[$i] === false) break;
+			
+			$parser[$i] = xml_parser_create();
+			$postdat[$i] = fread($posts[$i], 4096);
+			xml_parse_into_struct($parser[$i],$postdat[$i],$postvals[$i]);
+		}
 		
-		xml_parse_into_struct($parser,$postdat,$postvals);
 		xml_parser_free($parser);
 		fclose($posts);
 		
 		// parse it thoroughly and add posts //
-		foreach($postvals as $key=>$val) {
-			if($val[tag] == "NUM") {
-				echo("<a name=\""); print_r($val[value]); echo("\">");
-				echo("<a href=\"#"); print_r($val[value]); echo("\">");
-				echo("<h3>Post "); print_r($val[value]); echo("</a>: ");
+		for($v = $i; $v > 0; $v--)
+		{
+			foreach($postvals[$v] as $key=>$val)
+			{
+				if($val[tag] == "TITLE") {
+					$lmod = filemtime("../content/posts/post$v.xml");
+					echo("<a name=\"$v\"> <a href=\"#$v\"><h3>Post $v</a>: ");print_r($val[value]); echo("</h3>\n");
+					echo("<small>Posted "); echo(date("m/j/y h:i", $lmod)); echo("</small><br/>\n");
+				}
+				if($val[tag] == "BODY") {
+					echo("<p>"); print_r($val[value]); echo("</p><br/>\n");
+				}
 			}
-			if($val[tag] == "TITLE") {
-				print_r($val[value]); echo("</h3>\n");
-			}
-			if($val[tag] == "BODY") {
-				echo("<p>"); print_r($val[value]); echo("</p><br/>\n");
-			}
+			unset($val);
 		}
-		unset($val);
 		?>
 	</div>
 	<!-- Sidebar -->
@@ -48,19 +54,20 @@
 			 <a href="1">Hello, world!</a>-->
 		<?php
 		// add posts to the articles list //
-		foreach($postvals as $key=>$val) {
-			if($val[tag] == "NUM") {
-				echo("<a href=\"#"); print_r($val[value]); echo("\">");
-				echo("<p>Post "); print_r($val[value]); echo(": ");
+		for($v = $i; $v > 0; $v--)
+		{
+			foreach($postvals[$v] as $key=>$val)
+			{
+				if($val[tag] == "TITLE") {
+					echo("<a href=\"#$v\"><p>$v</a>: ");print_r($val[value]); echo("</p>\n");
+				}
 			}
-			if($val[tag] == "TITLE") {
-				print_r($val[value]); echo("</p></a>\n");
-			}
+			unset($val);
 		}
 		unset($val);
 		?>
 	</div>
-	<div id="footer"><a href="https://freedns.afraid.org/">FreeDNS</a> | <a href="http://agitating.cf.gs/">Forums</a> | <a href="http://marby.cf.gs/">Main</a></div>
+	<div id="footer"><a href="https://freedns.afraid.org/">FreeDNS</a> | <a href="http://marby.cf.gs/">Main</a></div>
 </div>
 </body>
 </html>
