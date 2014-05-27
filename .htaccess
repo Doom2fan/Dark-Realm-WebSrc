@@ -1,0 +1,6 @@
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+# # av:php5-engine
+AddHandler av-php53 .php
+RewriteEngine On
+RewriteRule ^(includes/|Restricted/) - [F,L,NC]
